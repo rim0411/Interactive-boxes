@@ -12,12 +12,10 @@
     margin-top:50px;
     border: solid rgb(127, 124, 124);
     padding:45px;
-    margin:auto
- 
+    margin:auto;
+    width: max-content;
 }
-.container-options{
- 
-}
+
 .delete-icon{
     color:rgb(0, 157, 255);
     font-size: 30px;
