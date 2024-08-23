@@ -3,9 +3,11 @@
 @for (box of boxes; track boxes) {
 <app-box [boxValue]="box" (clickedBox)="doSomeActionsOnBox($event)"></app-box>
 }
+<div class="right-section">
 <i class="material-icons delete-icon" (click)="refreshBoxes()" >delete</i>
 Total value:
 {{sumOfFilledBoxesValue}}
+</div>
 </div>
 @if(isOptionsSelectionsOpened){
 <diV class="container-options" >

@@ -14,7 +14,6 @@
 .container-options{
     margin-top:50px;
     border: solid rgb(127, 124, 124);
-    width:50%;
     padding:45px;
     margin:auto
 }
@@ -22,4 +21,8 @@
     color:rgb(0, 157, 255);
     font-size: 30px;
     cursor: pointer;
+}
+.right-section{
+    display: flex;
+    flex-direction: column;
 }

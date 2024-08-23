@@ -30,7 +30,7 @@ export class AppComponent {
     for (let i = 1; i <= 10; i++) {
       this.boxes.push({ id: i, color: 'grey', optionSelected: null, isMessageSelection: true, value: 3 * i + 6 })
     }
-    for (let i = 1; i <= 12; i++) {
+    for (let i = 1; i <= 20; i++) {
       this.optionSelections.push({ value: i * 2 + 1, color: 'grey', idBox: -1 })
     }
     // getting the values inside boxes after filling them and refresh the page
