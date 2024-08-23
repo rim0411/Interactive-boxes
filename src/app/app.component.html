@@ -1,6 +1,7 @@
 
 <div class="boxes">
 @for (box of boxes; track boxes) {
+  {{box.id}}
 <app-box [boxValue]="box" (clickedBox)="doSomeActionsOnBox($event)"></app-box>
 }
 <div class="right-section">
@@ -10,11 +11,11 @@ Total value:
 </div>
 </div>
 @if(isOptionsSelectionsOpened){
-<diV class="container-options" >
+
 <div class="options">
 @for (option of optionSelections; track boxes) {
 <app-option-selector [option]="option" (injectValueIntoBox)="addvalueToSelectedBox($event)" ></app-option-selector>
 }
 </div>
-</diV>
+
 }

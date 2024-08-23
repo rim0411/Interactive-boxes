@@ -1,4 +1,4 @@
-import { Component } from '@angular/core';
+import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
 import { BoxComponent } from './box/box.component';
 import { OptionSelectorComponent } from './option-selector/option-selector.component';
@@ -12,6 +12,7 @@ import { ShareDataService } from './share-data.service';
   standalone: true,
   imports: [RouterOutlet, BoxComponent, OptionSelectorComponent, CommonModule],
   templateUrl: './app.component.html',
+  changeDetection: ChangeDetectionStrategy.OnPush,
   styleUrl: './app.component.css'
 })
 export class AppComponent {
@@ -23,6 +24,7 @@ export class AppComponent {
   savedValuesIntoBoxes: { id: number, value: number }[] = [];
   sumOfFilledBoxesValue = 0;
   constructor(private shareDataService: ShareDataService) { }
+  private cd = inject(ChangeDetectorRef)
   ngOnInit() {
     this.inializeBoxesAndOptionsLists()
   }
@@ -62,6 +64,7 @@ export class AppComponent {
       this.optionSelections.map(optionSelected => optionSelected.value === optionSavedIntoBox ? optionSelected.color = 'red' : optionSelected.color = 'white')
 
     })
+    this.cd.markForCheck();
   }
 
   addvalueToSelectedBox(option: Ioption) {
@@ -95,6 +98,7 @@ export class AppComponent {
     if (savedBoxList.filter((box: { value: number, id: number }) => box.id === this.selectedBoxId - 1).length > 1 || this.savedValuesIntoBoxes.filter(box => box.id === this.selectedBoxId - 1).length > 1) {
       this.boxes[this.selectedBoxId - 1].value = this.boxes[this.selectedBoxId - 1].value + 6
     }
+    this.cd.markForCheck();
   }
   refreshBoxes() {
     // clear list of values and sum stored into localstorage
