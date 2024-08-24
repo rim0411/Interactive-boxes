@@ -1,7 +1,8 @@
 import { CommonModule } from '@angular/common';
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Ibox } from '../models/box.model';
-import { ShareDataService } from '../share-data.service';
+import { Ibox } from '../../models/box.model';
+import { ShareDataService } from '../../share-data.service';
+
 
 @Component({
   selector: 'app-box',

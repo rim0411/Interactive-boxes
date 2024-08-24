@@ -1,6 +1,7 @@
 import { Component, EventEmitter, Input, Output } from '@angular/core';
-import { Ioption } from '../models/option.model';
+
 import { CommonModule } from '@angular/common';
+import { Ioption } from '../../models/option.model';
 @Component({
   selector: 'app-option-selector',
   standalone: true,

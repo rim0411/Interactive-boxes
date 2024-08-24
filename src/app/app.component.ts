@@ -1,11 +1,13 @@
 import { ChangeDetectionStrategy, ChangeDetectorRef, Component, inject } from '@angular/core';
 import { RouterOutlet } from '@angular/router';
-import { BoxComponent } from './box/box.component';
-import { OptionSelectorComponent } from './option-selector/option-selector.component';
+
+import { OptionSelectorComponent } from './components/option-selector/option-selector.component';
 import { Ibox } from './models/box.model';
 import { Ioption } from './models/option.model';
 import { CommonModule } from '@angular/common';
 import { ShareDataService } from './share-data.service';
+import { BoxComponent } from './components/box/box.component';
+import { IHistoricalBoxValue } from './models/historicalBoxValue.model';
 
 @Component({
   selector: 'app-root',
@@ -21,7 +23,7 @@ export class AppComponent {
   optionSelections: Ioption[] = []
   isOptionsSelectionsOpened = false;
   selectedBoxId!: number;
-  savedValuesIntoBoxes: { id: number, value: number }[] = [];
+  savedValuesIntoBoxes: IHistoricalBoxValue[] = [];
   sumOfFilledBoxesValue = 0;
   constructor(private shareDataService: ShareDataService) { }
   private cd = inject(ChangeDetectorRef)
@@ -30,7 +32,7 @@ export class AppComponent {
   }
   inializeBoxesAndOptionsLists() {
     for (let i = 1; i <= 10; i++) {
-      this.boxes.push({ id: i, color: 'grey', optionSelected: null, isMessageSelection: true, value: 3 * i + 6 })
+      this.boxes.push({ id: i, color: 'grey', optionSelected: null, isMessageSelection: true, value: 3 * i + 6,histoticalOptionSelected:[] })
     }
     for (let i = 1; i <= 20; i++) {
       this.optionSelections.push({ value: i * 2 + 1, color: 'grey', idBox: -1 })
@@ -38,8 +40,10 @@ export class AppComponent {
     // getting the values inside boxes after filling them and refresh the page
     if (localStorage.getItem("boxesValues")) {
       let historicalBoxesValues = JSON.parse(localStorage.getItem("boxesValues") as string)
-      historicalBoxesValues.forEach((element: { id: number, value: number }) => {
+      historicalBoxesValues.forEach((element: IHistoricalBoxValue) => {
         this.boxes[element.id].optionSelected = element.value
+        this.boxes[element.id].value = element.boxValue
+        this.boxes[element.id].histoticalOptionSelected = element.historicalValues
         this.boxes[element.id].isMessageSelection = false
       });
     }
@@ -70,6 +74,8 @@ export class AppComponent {
   addvalueToSelectedBox(option: Ioption) {
     // filling the box with the value choosed from options
     this.boxes[this.selectedBoxId - 1].optionSelected = option.value
+   //saving the different values trying to be injected into box 
+    this.boxes[this.selectedBoxId - 1].histoticalOptionSelected .push( option.value)
     // color the current box with grey
     this.boxes[this.selectedBoxId - 1].color = 'grey'
     // color the next box with green 
@@ -79,9 +85,7 @@ export class AppComponent {
     }
     // remove the intial message of choose an option
     this.boxes[this.selectedBoxId - 1].isMessageSelection = false
-    // storing the values inject  into localstorage to get them after refreshing the page
-    this.savedValuesIntoBoxes.push({ id: this.selectedBoxId - 1, value: option.value })
-    localStorage.setItem("boxesValues", localStorage.getItem("boxesValues") ? JSON.stringify([...JSON.parse(localStorage.getItem("boxesValues") as string), ...this.savedValuesIntoBoxes]) : JSON.stringify(this.savedValuesIntoBoxes));
+
     // adding for option the id box
     this.optionSelections.forEach(opt => {
       if (opt.value == option.value) {
@@ -93,11 +97,13 @@ export class AppComponent {
     // calculating the sum of values and storing it localstorage 
     this.sumOfFilledBoxesValue = this.sumOfFilledBoxesValue + this.boxes[this.selectedBoxId - 1].value
     localStorage.setItem("boxesSum", JSON.stringify(this.sumOfFilledBoxesValue))
-    let savedBoxList = JSON.parse(localStorage.getItem("boxesValues") as string)
     // change the value of the box if a option has been inject one then a time 
-    if (savedBoxList.filter((box: { value: number, id: number }) => box.id === this.selectedBoxId - 1).length > 1 || this.savedValuesIntoBoxes.filter(box => box.id === this.selectedBoxId - 1).length > 1) {
+    if (this.boxes[this.selectedBoxId - 1].histoticalOptionSelected.length>1) {
       this.boxes[this.selectedBoxId - 1].value = this.boxes[this.selectedBoxId - 1].value + 6
     }
+        // storing the values inject  into localstorage to get them after refreshing the page
+        this.savedValuesIntoBoxes.push({ id: this.selectedBoxId - 1, value: option.value ,boxValue:this.boxes[this.selectedBoxId - 1].value,historicalValues:this.boxes[this.selectedBoxId - 1].histoticalOptionSelected})
+        localStorage.setItem("boxesValues", localStorage.getItem("boxesValues") ? JSON.stringify([...JSON.parse(localStorage.getItem("boxesValues") as string), ...this.savedValuesIntoBoxes]) : JSON.stringify(this.savedValuesIntoBoxes));
     this.cd.markForCheck();
   }
   refreshBoxes() {
