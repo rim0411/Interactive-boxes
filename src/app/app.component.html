@@ -7,10 +7,10 @@
 <div class="right-section">
 <i class="material-icons delete-icon" (click)="refreshBoxes()" >delete</i>
 Total value:
-{{sumOfFilledBoxesValue}}
+{{sumOfFilledBoxesValue()}}
 </div>
 </div>
-@if(isOptionsSelectionsOpened){
+@if(isOptionsSelectionsOpened()){
 
 <div class="options">
 @for (option of optionSelections; track boxes) {

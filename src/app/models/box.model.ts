@@ -3,5 +3,6 @@ export  interface Ibox{
     color:string,
     optionSelected:number|null,
     isMessageSelection:boolean,
-    value:number
+    value:number,
+    histoticalOptionSelected:number[]
 }
