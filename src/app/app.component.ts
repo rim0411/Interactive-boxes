@@ -18,7 +18,6 @@ import { IHistoricalBoxValue } from './models/historicalBoxValue.model';
   styleUrl: './app.component.css'
 })
 export class AppComponent {
-  title = 'interactive-boxes';
   boxes: Ibox[] = []
   optionSelections: Ioption[] = []
   isOptionsSelectionsOpened = false;
@@ -28,14 +27,17 @@ export class AppComponent {
   constructor(private shareDataService: ShareDataService) { }
   private cd = inject(ChangeDetectorRef)
   ngOnInit() {
-    this.inializeBoxesAndOptionsLists()
+    this.inializeOptionsList();
+    this.inializeBoxesList();
   }
-  inializeBoxesAndOptionsLists() {
-    for (let i = 1; i <= 10; i++) {
-      this.boxes.push({ id: i, color: 'grey', optionSelected: null, isMessageSelection: true, value: 3 * i + 6,histoticalOptionSelected:[] })
-    }
+  inializeOptionsList() {
     for (let i = 1; i <= 20; i++) {
-      this.optionSelections.push({ value: i * 2 + 1, color: 'grey', idBox: -1 })
+      this.optionSelections.push({ value: i * 2 + 1, color: 'grey'})
+    }
+  }
+  inializeBoxesList() {
+    for (let i = 1; i <= 10; i++) {
+      this.boxes.push({ id: i, color: 'grey', optionSelected: null, value: 3 * i + 6, histoticalOptionSelected: [] })
     }
     // getting the values inside boxes after filling them and refresh the page
     if (localStorage.getItem("boxesValues")) {
@@ -44,7 +46,6 @@ export class AppComponent {
         this.boxes[element.id].optionSelected = element.value
         this.boxes[element.id].value = element.boxValue
         this.boxes[element.id].histoticalOptionSelected = element.historicalValues
-        this.boxes[element.id].isMessageSelection = false
       });
     }
     // getting the sum of values after refreshing the page
@@ -60,7 +61,7 @@ export class AppComponent {
     // saving the id of selected box
     this.selectedBoxId = boxSelected.id
     // after refreshing page color the other options not injected into the box with intial color white
-    this.optionSelections.filter(option => option.idBox !== this.selectedBoxId - 1).map(option => option.color = 'white')
+    this.optionSelections.filter(option => option.value !== this.boxes[this.selectedBoxId - 1].optionSelected).map(option => option.color = 'white')
     // after refreshing page color the other boxes  with intial color grey
     this.boxes.filter(box => box.id !== boxSelected.id).map(box => box.color = 'grey')
     //In option selections component and after refreshing page color the option injected into the box with red 
@@ -74,8 +75,8 @@ export class AppComponent {
   addvalueToSelectedBox(option: Ioption) {
     // filling the box with the value choosed from options
     this.boxes[this.selectedBoxId - 1].optionSelected = option.value
-   //saving the different values trying to be injected into box 
-    this.boxes[this.selectedBoxId - 1].histoticalOptionSelected .push( option.value)
+    //saving the different values trying to be injected into box 
+    this.boxes[this.selectedBoxId - 1].histoticalOptionSelected.push(option.value)
     // color the current box with grey
     this.boxes[this.selectedBoxId - 1].color = 'grey'
     // color the next box with green 
@@ -83,28 +84,23 @@ export class AppComponent {
     if (this.selectedBoxId != 10) {
       this.boxes[this.selectedBoxId].color = 'green'
     }
-    // remove the intial message of choose an option
-    this.boxes[this.selectedBoxId - 1].isMessageSelection = false
-
-    // adding for option the id box
-    this.optionSelections.forEach(opt => {
-      if (opt.value == option.value) {
-        opt.idBox = this.selectedBoxId - 1
-      }
-    })
     // after refreshing color the other options not injected into the box with initial color
-    this.optionSelections.filter(option => option.idBox !== this.selectedBoxId - 1).map(option => option.color = 'white')
-    // calculating the sum of values and storing it localstorage 
-    this.sumOfFilledBoxesValue = this.sumOfFilledBoxesValue + this.boxes[this.selectedBoxId - 1].value
-    localStorage.setItem("boxesSum", JSON.stringify(this.sumOfFilledBoxesValue))
+    this.optionSelections.filter(option => option.value !== this.boxes[this.selectedBoxId - 1].optionSelected).map(option => option.color = 'white')
+   
     // change the value of the box if a option has been inject one then a time 
-    if (this.boxes[this.selectedBoxId - 1].histoticalOptionSelected.length>1) {
+    if (this.boxes[this.selectedBoxId - 1].histoticalOptionSelected.length > 1) {
       this.boxes[this.selectedBoxId - 1].value = this.boxes[this.selectedBoxId - 1].value + 6
     }
-        // storing the values inject  into localstorage to get them after refreshing the page
-        this.savedValuesIntoBoxes.push({ id: this.selectedBoxId - 1, value: option.value ,boxValue:this.boxes[this.selectedBoxId - 1].value,historicalValues:this.boxes[this.selectedBoxId - 1].histoticalOptionSelected})
-        localStorage.setItem("boxesValues", localStorage.getItem("boxesValues") ? JSON.stringify([...JSON.parse(localStorage.getItem("boxesValues") as string), ...this.savedValuesIntoBoxes]) : JSON.stringify(this.savedValuesIntoBoxes));
+     this.storingDataIntoLocalStorage(option);
     this.cd.markForCheck();
+  }
+  storingDataIntoLocalStorage(option:Ioption){
+    // calculating the sum of values and storing it localstorage 
+    this.sumOfFilledBoxesValue = this.sumOfFilledBoxesValue + this.boxes[this.selectedBoxId - 1].value;
+    localStorage.setItem("boxesSum", JSON.stringify(this.sumOfFilledBoxesValue));
+   // storing the values inject  into localstorage to get them after refreshing the page
+   this.savedValuesIntoBoxes.push({ id: this.selectedBoxId - 1, value: option.value, boxValue: this.boxes[this.selectedBoxId - 1].value, historicalValues: this.boxes[this.selectedBoxId - 1].histoticalOptionSelected })
+   localStorage.setItem("boxesValues", localStorage.getItem("boxesValues") ? JSON.stringify([...JSON.parse(localStorage.getItem("boxesValues") as string), ...this.savedValuesIntoBoxes]) : JSON.stringify(this.savedValuesIntoBoxes));
   }
   refreshBoxes() {
     // clear list of values and sum stored into localstorage
@@ -113,8 +109,6 @@ export class AppComponent {
     this.boxes.map(box => box.optionSelected = null);
     // clear colors of options
     this.optionSelections.map(box => box.color = 'white');
-    // displaying the first message into boxes
-    this.boxes.map(box => box.isMessageSelection = true);
     // reinitialize the sum to 0
     this.sumOfFilledBoxesValue = 0;
     // setting the color of subject behavior to null because it persists 

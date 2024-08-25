@@ -14,7 +14,7 @@ import { ShareDataService } from '../../share-data.service';
 export class BoxComponent {
   @Input() boxValue!: Ibox
   @Input() optionSelected!: { value: string, idBox: number }
-  @Output() clickedBox = new EventEmitter<Ibox>()
+  @Output() boxClicked = new EventEmitter<Ibox>()
   constructor(private shareDataService: ShareDataService) { }
   chooseBox() {
     // store the value inject into the box in order to color the adequat value in options list
@@ -22,6 +22,6 @@ export class BoxComponent {
       this.shareDataService.setColorfulSelectedOption(this.boxValue.optionSelected)
     }
     //emit a value to the parent component when we click on a box
-    this.clickedBox.emit(this.boxValue)
+    this.boxClicked.emit(this.boxValue)
   }
 }

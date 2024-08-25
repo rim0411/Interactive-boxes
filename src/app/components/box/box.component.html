@@ -1,9 +1,9 @@
 <div class="box" [ngClass]="boxValue.color" (click)="chooseBox()">
-    @if(boxValue.isMessageSelection){
+    @if(!boxValue.optionSelected){
     <div class="selectMessage">Select an option</div>
-    }
+    }  
+    @if(boxValue.optionSelected){
     <div class="optionSelected">{{boxValue.optionSelected}}</div>
-    @if(!boxValue.isMessageSelection){
     <div class="boxValue">{{boxValue.value}}</div>
     }
 </div>
