@@ -12,7 +12,6 @@ import { Ioption } from '../../models/option.model';
 export class OptionSelectorComponent {
   @Input() option: Ioption = { value: 0, color: '', idBox: 0 };
   @Output() injectValueIntoBox = new EventEmitter<Ioption>();
-
   // emitting an event to inject option selected into the selected box
   addValueToBox() {
     this.injectValueIntoBox.emit(this.option)

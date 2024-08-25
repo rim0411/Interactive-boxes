@@ -11,7 +11,7 @@ export const OptionsStore = signalStore(
     colorfulSelectedOption: -1
   }),
   withMethods((store: any) => ({
-    setColorfulSelecctedOption(colorfulSelecctedOption: number) {
+    setColorfulSelectedOption(colorfulSelecctedOption: number) {
       patchState(store, { colorfulSelectedOption: colorfulSelecctedOption });
     }
   }))
