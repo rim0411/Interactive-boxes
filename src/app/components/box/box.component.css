@@ -3,7 +3,6 @@
     height: 200px;
     display: flex;
 }
-
 .optionSelected {
     font-weight: 500;
     font-size: 40px;
@@ -25,11 +24,4 @@
     align-items: end;
     justify-content: center;
     font-weight: bold;
-}
-.grey{
-    background-color: #80808069;
-}
-
-.green{
-    background-color: #60c97069;
 }

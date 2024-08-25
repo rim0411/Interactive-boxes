@@ -14,7 +14,7 @@ import { OptionsStore } from '../../signalsStore/options.store';
 export class BoxComponent {
   @Input() boxValue!: Ibox
   @Input() optionSelected!:{ value: string, idBox: number }
-  @Output() clickedBox = new EventEmitter<Ibox>()
+  @Output() boxClicked = new EventEmitter<Ibox>();
   constructor() { }
   readonly store = inject(OptionsStore);
   chooseBox() {
@@ -23,6 +23,6 @@ export class BoxComponent {
       this.store.setColorfulSelectedOption(this.boxValue.optionSelected as number)
     }
     //emit a value to the parent component when we click on a box
-    this.clickedBox.emit(this.boxValue)
+    this.boxClicked.emit(this.boxValue)
   }
 }
