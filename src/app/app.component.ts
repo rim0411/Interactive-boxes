@@ -32,7 +32,7 @@ export class AppComponent {
   }
   inializeOptionsList() {
     for (let i = 1; i <= 20; i++) {
-      this.optionSelections.push({ value: i * 2 + 1, color: 'grey'})
+      this.optionSelections.push({ value: i * 2 + 1, color: 'grey' })
     }
   }
   inializeBoxesList() {
@@ -86,21 +86,21 @@ export class AppComponent {
     }
     // after refreshing color the other options not injected into the box with initial color
     this.optionSelections.filter(option => option.value !== this.boxes[this.selectedBoxId - 1].optionSelected).map(option => option.color = 'white')
-   
+
     // change the value of the box if a option has been inject one then a time 
     if (this.boxes[this.selectedBoxId - 1].histoticalOptionSelected.length > 1) {
       this.boxes[this.selectedBoxId - 1].value = this.boxes[this.selectedBoxId - 1].value + 6
     }
-     this.storingDataIntoLocalStorage(option);
+    this.storingDataIntoLocalStorage(option);
     this.cd.markForCheck();
   }
-  storingDataIntoLocalStorage(option:Ioption){
+  storingDataIntoLocalStorage(option: Ioption) {
     // calculating the sum of values and storing it localstorage 
     this.sumOfFilledBoxesValue = this.sumOfFilledBoxesValue + this.boxes[this.selectedBoxId - 1].value;
     localStorage.setItem("boxesSum", JSON.stringify(this.sumOfFilledBoxesValue));
-   // storing the values inject  into localstorage to get them after refreshing the page
-   this.savedValuesIntoBoxes.push({ id: this.selectedBoxId - 1, value: option.value, boxValue: this.boxes[this.selectedBoxId - 1].value, historicalValues: this.boxes[this.selectedBoxId - 1].histoticalOptionSelected })
-   localStorage.setItem("boxesValues", localStorage.getItem("boxesValues") ? JSON.stringify([...JSON.parse(localStorage.getItem("boxesValues") as string), ...this.savedValuesIntoBoxes]) : JSON.stringify(this.savedValuesIntoBoxes));
+    // storing the values inject  into localstorage to get them after refreshing the page
+    this.savedValuesIntoBoxes.push({ id: this.selectedBoxId - 1, value: option.value, boxValue: this.boxes[this.selectedBoxId - 1].value, historicalValues: this.boxes[this.selectedBoxId - 1].histoticalOptionSelected })
+    localStorage.setItem("boxesValues", localStorage.getItem("boxesValues") ? JSON.stringify([...JSON.parse(localStorage.getItem("boxesValues") as string), ...this.savedValuesIntoBoxes]) : JSON.stringify(this.savedValuesIntoBoxes));
   }
   refreshBoxes() {
     // clear list of values and sum stored into localstorage
